@@ -42,6 +42,10 @@ Pengerjaan Soal Shift Komunikasi Data dan Jaringan Komputer Modul 1 oleh ITB04
     * [Jawaban Soal 7](#jawaban-soal-7)
     * [Penyelesaian dan Dokumentasi Soal 7](#penyelesaian-dan-dokumentasi-soal-7)
     * [Kendala Soal 7](#kendala-soal-7)
+* [Soal 8](#soal-8)
+    * [Jawaban Soal 8](#jawaban-soal-8)
+    * [Penyelesaian dan Dokumentasi Soal 8](#penyelesaian-dan-dokumentasi-soal-8)
+    * [Kendala Soal 8](#kendala-soal-8)
 
 ## Sumber Soal dan Resource Praktikum Komunikasi Data dan Jaringan Komputer Modul 2 Tahun 2022
 Adapun untuk soal dan _resource_ yang digunakan dalam praktikum 2
@@ -606,3 +610,52 @@ ping -c 3 strix.operation.wise.itb04.com
 
 ### Kendala Soal 7
 Tidak ada
+
+
+---
+
+### Ketentuan Proxy
+1. Client hanya dapat mengakses internet diluar (selain) hari & jam kerja (senin-jumat 08.00 - 17.00) dan hari libur (dapat mengakses 24 jam penuh)
+
+2. Adapun pada hari dan jam kerja sesuai nomor (1), client hanya dapat mengakses domain loid-work.com dan franky-work.com (IP tujuan domain dibebaskan)
+
+3. Saat akses internet dibuka, client dilarang untuk mengakses web tanpa HTTPS. (Contoh web HTTP: http://example.com)
+
+4. Agar menghemat penggunaan, akses internet dibatasi dengan kecepatan maksimum 128 Kbps pada setiap host (Kbps = kilobit per second; lakukan pengecekan pada tiap host, ketika 2 host akses internet pada saat bersamaan, keduanya mendapatkan speed maksimal yaitu 128 Kbps)
+
+5. Setelah diterapkan, ternyata peraturan nomor (4) mengganggu produktifitas saat hari kerja, dengan demikian pembatasan kecepatan hanya diberlakukan untuk pengaksesan internet pada hari libur
+
+
+Setelah proxy Berlint diatur oleh Loid, dia melakukan pengujian dan mendapatkan hasil sesuai tabel berikut.
+
+
+|                   Aksi                  |   Senin (10.00)  |       Senin (20.00)      | Sabtu (10.00) |
+|:---------------------------------------:|:----------------:|:------------------------:|:-------------:|
+| Akses internet (HTTP)                   |         x        |             x            |       x       |
+| Akses internet (HTTPS)                  |         x        |             v            |       v       |
+| Akses loid-work.com dan franky-work.com |         v        |             x            |       x       |
+| Speed limit (128Kbps)                   | Tidak bisa akses | x (Speed Tidak Dibatasi) |       x       |
+
+### Jawaban
+1. Pada Berlint, edit `acl.conf` menjadi 
+```
+acl AVAILABLE_WORKING time MTWHF 00:00-07:59
+acl AVAILABLE_WORKING time MTWHF 17:01-23:59
+acl AVAILABLE_WORKING time SA 00:00-23:59
+```
+dan `squid.conf` menjadi 
+```
+include /etc/squid/acl.conf
+http_port 8080
+http_access allow AVAILABLE_WORKING
+http_access deny all
+visible_hostname Berlint
+```
+
+2. Pada `squid.conf` tambahkan 
+```
+acl loid dstdomain loid-work.com
+acl franky dstdomain franky-work.com
+http_access allow loid
+http_access allow franky
+```
