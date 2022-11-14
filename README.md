@@ -613,6 +613,7 @@ Tidak ada
 
 
 ---
+## Soal 8
 
 ### Ketentuan Proxy
 1. Client hanya dapat mengakses internet diluar (selain) hari & jam kerja (senin-jumat 08.00 - 17.00) dan hari libur (dapat mengakses 24 jam penuh)
@@ -636,7 +637,7 @@ Setelah proxy Berlint diatur oleh Loid, dia melakukan pengujian dan mendapatkan 
 | Akses loid-work.com dan franky-work.com |         v        |             x            |       x       |
 | Speed limit (128Kbps)                   | Tidak bisa akses | x (Speed Tidak Dibatasi) |       x       |
 
-### Jawaban
+### Jawaban soal 8
 1. Pada Berlint, edit `acl.conf` menjadi 
 ```
 acl AVAILABLE_WORKING time MTWHF 00:00-07:59
@@ -659,3 +660,6 @@ acl franky dstdomain franky-work.com
 http_access allow loid
 http_access allow franky
 ```
+
+### Kendala Soal 8
+Tidak ada
